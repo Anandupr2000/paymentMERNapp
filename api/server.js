@@ -1,9 +1,12 @@
-let host = 'http://192.168.1.4'
-let port = 3000
+// let host = 'http://192.168.1.4'
+// let port = 3000
+// let host = "https://sangria-wasp-gear.cyclic.app"
+let host = "https://paymentappserver.onrender.com"
 
 const connectToServer = async () => {
     try {
-        const res = await fetch(host + ':' + port);
+        // const res = await fetch(host + ':' + port);
+        const res = await fetch(host);
         if (!res.ok) {
             throw new Error('Network response was not ok');
         }
@@ -20,7 +23,8 @@ const doRegisteration = async (name, email, phn, passcode) => {
         pwd: passcode
     };
     try {
-        const res = await fetch(host + ':' + port + '/users/register', {
+        // const res = await fetch(host + ':' + port + '/users/register', {
+        const res = await fetch(host + '/users/register', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -33,7 +37,7 @@ const doRegisteration = async (name, email, phn, passcode) => {
         return res.json();
     }
     catch (err) {
-        return err;
+        return { err: err, success: false }
     }
 }
 const doLogin = async (phn, passcode) => {
@@ -42,7 +46,8 @@ const doLogin = async (phn, passcode) => {
         pwd: passcode
     };
     try {
-        const res = await fetch(host + ':' + port + '/users/login', {
+        // const res = await fetch(host + ':' + port + '/users/login', {
+        const res = await fetch(host + '/users/login', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -50,13 +55,14 @@ const doLogin = async (phn, passcode) => {
             body: JSON.stringify(postData),
         });
         if (!res.ok) {
-            throw new Error('Network response was not ok');
+            // throw new Error('Network response was not ok');
+            throw new Error('Unable to connect to server');
         }
         // console.log(res);
         return res.json();
     }
     catch (err) {
-        return err;
+        return { err: err, success: false }
     }
 }
 
@@ -65,7 +71,7 @@ const searchUser = async (text) => {
         keyword: text,
     };
     try {
-        const res = await fetch(host + ':' + port + '/users/search', {
+        const res = await fetch(host + '/users/search', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -73,14 +79,14 @@ const searchUser = async (text) => {
             body: JSON.stringify(postData),
         });
         if (!res.ok) {
-            throw new Error('Network response was not ok');
+            throw new Error('Unable to connect to server');
         }
         // console.log(res);
         return res.json();
     }
     catch (err) {
         console.log(err)
-        return err;
+        return { err: err, success: false }
     }
 }
 /**
@@ -98,7 +104,7 @@ const doPayment = async (payor, payee, amount) => {
     };
     console.log(postData)
     try {
-        const res = await fetch(host + ':' + port + '/payment', {
+        const res = await fetch(host + '/payment', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -106,14 +112,14 @@ const doPayment = async (payor, payee, amount) => {
             body: JSON.stringify(postData),
         });
         if (!res.ok) {
-            throw new Error('Network response was not ok');
+            throw new Error('Unable to connect to server');
         }
         // console.log(res);
         return res.json();
     }
     catch (err) {
         console.log(err)
-        return err;
+        return { err: err, success: false }
     }
 }
 export { connectToServer, doRegisteration, doLogin, doPayment, searchUser }

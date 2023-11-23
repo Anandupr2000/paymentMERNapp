@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Alert, Button, Pressable, SafeAreaView, StyleSheet, Text, TextInput, View } from 'react-native'
+import { Alert, Button, Pressable, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native'
 import styles from "./Login.module.css"
 import { connectToServer, doLogin, doRegisteration } from '../api/server';
 import { StackActions } from '@react-navigation/native';
@@ -13,12 +13,22 @@ function Login({ navigation }) {
     const [passCode, setPassCode] = useState();
     const [conformPassCode, setConformPassCode] = useState();
     const [loginFormVisibility, setLoginFormVisibility] = useState(true)
+    const [loginStatus, setLoginStatus] = useState(false)
+    const [registerationStatus, setRegisterationStatus] = useState(false)
 
     const [err, setErr] = useState();
 
     useEffect(() => {
         loginFormVisibility ? navigation.setOptions({ title: "Login" }) : navigation.setOptions({ title: "Registeration" })
     }, [loginFormVisibility])
+
+    // fetch("https://sangria-wasp-gear.cyclic.app")
+    //     .then(res => {
+    //         Alert.alert("Connection", "Server connection sucess")
+    //         console.log(res)
+    //     })
+    //     .catch(err => console.log(err))
+
     const isValidInputs = () => {
         if (!phoneNum) {
             Alert.alert("Phone number", 'Please enter phone number', [{ text: 'OK' }])
@@ -66,6 +76,8 @@ function Login({ navigation }) {
     }
 
     const handleLogin = (e) => {
+        // disabling login btn for login
+        setLoginStatus(true)
         if (isValidInputs()) {
             // Alert.alert("Validation", 'Your data has sucessfully validated')
             loginUser()
@@ -80,11 +92,16 @@ function Login({ navigation }) {
             navigation.dispatch(StackActions.replace("Home", { user: res.user }))
         }
         else {
-            Alert.alert("Login", res.err)
-            toggleFormVisibility()
+            console.log(res.err)
+            Alert.alert("Login", res.err.message)
+            // toggleFormVisibility()
         }
+        // enabling login btn
+        setLoginStatus(false)
     }
     const handleRegisteration = (e) => {
+        // disabling register btn for registeration process
+        setRegisterationStatus(true)
         if (isValidRegInputs()) {
             // Alert.alert("Validation", 'Your data has sucessfully validated')
             registerUser()
@@ -93,12 +110,16 @@ function Login({ navigation }) {
 
     const registerUser = async () => {
         let res = await doRegisteration(name, email, phoneNum, passCode)
+        console.log(res)
         if (res.success) {
             Alert.alert("Registeration", "You have successfully completed the registeration")
             toggleFormVisibility()
         }
         else
-            Alert.alert("Registeration", res.err)
+            Alert.alert("Registeration", res.err.message)
+
+        // enabling registration
+        setRegisterationStatus(false)
     }
 
     // useEffect(() => {
@@ -117,18 +138,19 @@ function Login({ navigation }) {
             {/* <InternetChecker /> */}
             {
                 loginFormVisibility ?
-                    <>
-                        <View style={styles.inputView}>
+                    <View style={styles.loginForm}>
+                        <View style={styles.inputViewLogin}>
                             <TextInput
                                 onChangeText={text => { setPhoneNum(text.replace(/[^0-9]/g, '')) }}
                                 style={styles.inputText}
+                                // value=''
                                 placeholder="Phone number"
                                 placeholderTextColor="#003f5c"
                                 keyboardType='numeric'
                                 textContentType='telephoneNumber'
                             />
                         </View>
-                        <View style={styles.inputView}>
+                        <View style={styles.inputViewLogin}>
                             <TextInput
                                 onChangeText={text => setPassCode(text)}
                                 style={styles.inputText}
@@ -140,74 +162,81 @@ function Login({ navigation }) {
                             />
                         </View>
                         <View style={styles.formActions}>
-                            <Button title='Login' onPress={handleLogin} />
+                            <View style={styles.formActionBtn}>
+                                <Button disabled={loginStatus} title=' Login ' onPress={handleLogin} />
+                            </View>
                             <Text>|</Text>
                             <Text style={styles.registerBtn} onPress={toggleFormVisibility}>
                                 Register
                             </Text>
                             {/* <Button title='Register' style={styles.registerBtn} onPress={showRegisterationForm} /> */}
                         </View>
-                    </>
+                    </View>
                     :
-                    <>
-                        <View style={styles.inputView}>
-                            <TextInput
-                                onChangeText={text => { setName(text) }}
-                                style={styles.inputText}
-                                placeholder="Full name"
-                                placeholderTextColor="#003f5c"
-                                textContentType='name'
-                            />
-                        </View>
-                        <View style={styles.inputView}>
-                            <TextInput
-                                onChangeText={text => { setEmail(text) }}
-                                style={styles.inputText}
-                                placeholder="Email"
-                                placeholderTextColor="#003f5c"
-                                keyboardType='email-address'
-                                textContentType='emailAddress'
-                            />
-                        </View>
-                        <View style={styles.inputView}>
-                            <TextInput
-                                onChangeText={text => { setPhoneNum(text) }}
-                                style={styles.inputText}
-                                placeholder="Phone number"
-                                placeholderTextColor="#003f5c"
-                                keyboardType='numeric'
-                                textContentType='telephoneNumber'
-                            />
-                        </View>
-                        <View style={styles.inputView}>
-                            <TextInput
-                                onChangeText={text => setPassCode(text)}
-                                style={styles.inputText}
-                                secureTextEntry
-                                placeholder="Passcode"
-                                placeholderTextColor="#003f5c"
-                                keyboardType='numeric'
+                    <View>
+                        <Text style={{ fontSize: 25, fontWeight: '800', marginTop: '10%', marginBottom: '5%', marginLeft: "auto", marginRight: "auto" }}>Enter details </Text>
+                        <ScrollView contentContainerStyle={styles.regForm}>
+                            <View style={styles.inputView}>
+                                <TextInput
+                                    onChangeText={text => { setName(text) }}
+                                    style={styles.inputText}
+                                    placeholder="Full name"
+                                    placeholderTextColor="#003f5c"
+                                    textContentType='name'
+                                />
+                            </View>
+                            <View style={styles.inputView}>
+                                <TextInput
+                                    onChangeText={text => { setEmail(text) }}
+                                    style={styles.inputText}
+                                    placeholder="Email"
+                                    placeholderTextColor="#003f5c"
+                                    keyboardType='email-address'
+                                    textContentType='emailAddress'
+                                />
+                            </View>
+                            <View style={styles.inputView}>
+                                <TextInput
+                                    onChangeText={text => { setPhoneNum(text) }}
+                                    style={styles.inputText}
+                                    placeholder="Phone number"
+                                    placeholderTextColor="#003f5c"
+                                    keyboardType='numeric'
+                                    textContentType='telephoneNumber'
+                                />
+                            </View>
+                            <View style={styles.inputView}>
+                                <TextInput
+                                    onChangeText={text => setPassCode(text)}
+                                    style={styles.inputText}
+                                    secureTextEntry
+                                    placeholder="Passcode"
+                                    placeholderTextColor="#003f5c"
+                                    keyboardType='numeric'
 
-                            />
-                        </View>
-                        <View style={styles.inputView}>
-                            <TextInput
-                                onChangeText={text => setConformPassCode(text)}
-                                style={styles.inputText}
-                                secureTextEntry
-                                placeholder="Re-Enter Passcode"
-                                placeholderTextColor="#003f5c"
-                                keyboardType='numeric'
-                            />
-                        </View>
-                        <View style={styles.formActions}>
-                            <Button title='Register' onPress={handleRegisteration} />
-                            <Text>|</Text>
-                            <Text style={styles.registerBtn} onPress={toggleFormVisibility}>
-                                Login
-                            </Text>
-                        </View>
-                    </>
+                                />
+                            </View>
+                            <View style={styles.inputView}>
+                                <TextInput
+                                    onChangeText={text => setConformPassCode(text)}
+                                    style={styles.inputText}
+                                    secureTextEntry
+                                    placeholder="Re-Enter Passcode"
+                                    placeholderTextColor="#003f5c"
+                                    keyboardType='numeric'
+                                />
+                            </View>
+                            <View style={styles.formActions}>
+                                <View style={styles.formActionBtn}>
+                                    <Button disabled={registerationStatus} title='Register' onPress={handleRegisteration} />
+                                </View>
+                                <Text>|</Text>
+                                <Text style={styles.registerBtn} onPress={toggleFormVisibility}>
+                                    Login
+                                </Text>
+                            </View>
+                        </ScrollView>
+                    </View>
             }
 
         </SafeAreaView>

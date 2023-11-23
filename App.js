@@ -28,10 +28,9 @@ export default function App() {
       <Stack.Navigator>
         <Stack.Screen name="Login" component={Login} />
         <Stack.Screen name="Home" component={HomeScreen} options={{ headerBackVisible: false }} />
-        <Stack.Screen name="Details" component={DetailsScreen} />
+        {/* <Stack.Screen name="Details" component={DetailsScreen} /> */}
       </Stack.Navigator>
     </NavigationContainer>
-
   );
 }
 

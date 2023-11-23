@@ -6,21 +6,27 @@ function Payee({ balanceChangedHook, payor, payee }) {
     let payorPhn = payor;
     const [payeePhn, setPayeePhn] = useState(false);
     const [modalVisible, setModalVisible] = useState(false);
+    const [activatePaymentBtn, setPaymentBtn] = useState(false);
     const [amount, setAmount] = useState(0);
     const textInputRef = useRef(null);
     const performPayment = () => {
         doPayment(payorPhn, payeePhn, amount).then(res => {
-            if (res.success){
-                Alert.alert("Payment","Your payment was successfull")
+
+            if (res.success) {
+                Alert.alert("Payment", "Your payment was successfull")
                 balanceChangedHook(res.newBalance)
+                setAmount(0);
+                setModalVisible(!modalVisible)
             }
+            else
+                Alert.alert("Payment", "Your payment failed")
+            setPaymentBtn(false)
         })
     }
 
     const handleConfirm = () => {
         onConfirm(amount);
     };
-
     return (
         <View style={styles.scrollViewItems}>
             <View style={styles.scrollViewItemsInfo}>
@@ -38,20 +44,34 @@ function Payee({ balanceChangedHook, payor, payee }) {
 
             <Modal
                 animationType="slide"
-                transparent={true}
+                transparent={modalVisible}
                 visible={modalVisible}>
                 <View style={styles.centeredView}>
                     <View style={styles.modalView}>
-                        <Text>Enter amount to send</Text>
+                        <Text style={{ fontSize: 20 }}>Enter amount to send</Text>
                         <TextInput
                             style={styles.amountInp}
                             value={amount.toString()}
                             onChangeText={(text) => setAmount(text)}
                         />
-                        <Button title='ok' onPress={() => {
-                            setModalVisible(!modalVisible)
-                            performPayment()
-                        }} />
+                        <View style={styles.modalActions}>
+                            <Button title='ok' disabled={activatePaymentBtn} onPress={() => {
+                                setPaymentBtn(true)
+                                let pattern = /\D/g;
+                                if (amount.match(pattern)) {
+                                    alert("Please enter a valid amount!")
+                                    setPaymentBtn(false)
+                                }
+                                else
+                                    performPayment()
+
+                            }} />
+
+                            <Button title='close' color={'gray'} onPress={() => {
+                                setModalVisible(!modalVisible)
+                            }} />
+                        </View>
+
                     </View>
                 </View>
             </Modal>
@@ -75,25 +95,31 @@ export default Payees
 const styles = StyleSheet.create({
     centeredView: {
         flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        marginTop: 22,
+        justifyContent: 'flex-end',
+        // alignItems: 'center',
+        marginTop: '60%',
     },
     modalView: {
         margin: 20,
         backgroundColor: 'white',
         borderRadius: 20,
+        borderStartWidth: 2,
+        borderStartColor: 'lightgray',
+        borderEndWidth: 2,
+        borderEndColor: 'lightgray',
+        borderTopColor: 'lightgray',
+        borderTopWidth: 4,
         padding: 35,
         alignItems: 'center',
         shadowColor: '#000',
         shadowOffset: {
             width: 0,
-            height: 2,
+            height: 4,
         },
-        shadowOpacity: 0.25,
+        shadowOpacity: 0.55,
         shadowRadius: 4,
-        elevation: 5,
-        gap: 20
+        elevation: 200,
+        gap: 50
     },
     button: {
         borderRadius: 20,
@@ -151,6 +177,13 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         textAlign: 'center',
         width: 150,
+        height: 50,
+        fontSize: 20,
         borderRadius: 15
+    },
+    modalActions: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        width: 150
     }
 })
