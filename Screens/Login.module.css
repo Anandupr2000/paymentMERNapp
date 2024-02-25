@@ -1,0 +1,74 @@
+.container {
+    flex: 1;
+    /* background-color: #4FD3DA; */
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    /* flex-shrink: 0.5; */
+    /* padding-top: 5%; */
+    /* padding-bottom: 5%; */
+}
+.loginForm{
+    align-items: center;
+    gap: 2rem;
+    width:100%;
+}
+.regForm{
+    /* border: 2px solid black; */
+    gap:.5rem;
+    min-width:100%;
+    min-height: 85%;
+    justify-content: center;
+    align-self: flex-end;
+    /* padding-top: 30%; */
+}
+.inputViewLogin{
+    width: 80%;
+    border: 1px solid #3AB4BA ;
+    border-radius: 25px;
+    height: 3.4rem;
+    margin-bottom: 20px;
+    justify-content: center;
+    padding: 10px;
+    padding-left: 20px;   
+}
+.inputView {
+    min-width: 80%;
+    max-width: 80%;
+    border: 1px solid #3AB4BA ;
+    border-radius: 25px;
+    height: 3.5rem;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 20px;
+    justify-content: center;
+    padding: 10px;
+    padding-left: 20px;   
+}
+.inputText {
+    font-size: 1.2rem;
+    height: 50px;
+}
+.formActions{
+    display: flex;
+    flex-direction: row;
+    align-items: baseline;
+    gap: 2rem;
+    /* height: max-content; */
+    margin-left: auto;
+    margin-right: auto;
+}
+.formActions:nth-child(3){
+    background: white;
+}
+.registerBtn{
+    background: transparent;
+    font-size: 20px;
+    color: #299aa0;
+}
+.formActionBtn{
+    height: 3rem;
+}
+/*
+.inputView{}
+ */

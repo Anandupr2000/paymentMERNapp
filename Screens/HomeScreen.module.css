@@ -1,0 +1,49 @@
+.container {
+    /* height: 100%; */
+    /* flex: 1; */
+    background: #fff;
+    align-items: center;
+    margin-top: 3rem;
+    /* padding-top: 20%; */
+    gap: 3rem;
+}
+.balanceView{
+    /* width: 22rem; */
+    /* height: 22rem; */
+    border: 1.2px gray;
+    border-radius: 13rem;
+    /* margin-left: auto; */
+    /* margin-right: auto; */
+    /* margin-top: 20%; */
+    color: black;
+    align-items: center;
+    justify-content: center;
+}
+.balanceHeadingText{
+    font-size: 28px;
+}
+.balanceText{
+    font-size: 5rem;
+}
+
+.rotatorView{
+    width: 3rem;
+    height: 3rem;
+    border: 1px solid gray;
+    border-radius: .3rem;
+    background-color: red;
+    /* animation:
+    3s linear slidein,
+    3s ease-out 5s slideout; */
+    /* animation-name: example;
+    animation-duration: 1s;
+    transform: rotate(45deg); */
+    /* animation-duration: 4s; */
+}
+
+@keyframes example {
+    0% {transform: rotate(45deg);}
+    40% {transform: rotate(90deg);}
+    60% {transform: rotate(135deg);}
+    100% {transform: rotate(360deg);}
+  }
